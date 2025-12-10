@@ -51,7 +51,7 @@ const loginError = document.querySelector("#loginError");
 
 // SIGN IN LOGIC
 loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     const username = loginUsername.value.trim();
     const password = loginPassword.value.trim();
@@ -80,7 +80,7 @@ const signupError = document.querySelector("#signupError");
 
 // SIGN UP LOGIC
 signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     const username = signupUsername.value.trim();
     const email = signupEmail.value.trim();
