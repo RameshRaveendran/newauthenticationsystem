@@ -2,13 +2,41 @@ const sign_in_btn = document.querySelector("#sign-in-btn");
 const sign_up_btn = document.querySelector("#sign-up-btn");
 const container = document.querySelector(".container");
 
+// sign_up_btn.addEventListener("click", () => {
+//   container.classList.add("sign-up-mode");
+// });
+
+// sign_in_btn.addEventListener("click", () => {
+//   container.classList.remove("sign-up-mode");
+// });
+
+// sign_up_btn.addEventListener("click", () => {
+//   window.location.href = "/register";
+// });
+
+// sign_in_btn.addEventListener("click", () => {
+//   window.location.href = "/login";
+// });
+
 sign_up_btn.addEventListener("click", () => {
   container.classList.add("sign-up-mode");
+
+  // redirect after animation time (600ms or based on your CSS)
+  setTimeout(() => {
+    window.location.href = "/register";
+  }, 2000);  // adjust based on your CSS transition time
 });
 
 sign_in_btn.addEventListener("click", () => {
   container.classList.remove("sign-up-mode");
+
+  setTimeout(() => {
+    window.location.href = "/login";
+  }, 2000);
 });
+
+
+
 
 
 console.log('login js loaded');
