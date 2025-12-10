@@ -9,16 +9,24 @@ const express = require('express');
 // Express Application Instance.
 const app = express()
 
+// Middleware to read JSON body
+app.use(express.json());
 
 
 // port assaignment
 const PORT = 3000 || process.env.PORT;
 
+//view engine
+app.set("view engine","ejs");
+
 
 //routes
-app.use('/',(req , res) => {
-    res.send('server is live')
-})
+app.get("/", (req, res) => {
+    res.render("home", { name: "Ramesh" });
+});
+
+
+
 
 
 
