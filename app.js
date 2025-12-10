@@ -4,6 +4,7 @@ require("dotenv").config();
 
 // requires
 const express = require('express');
+const path = require('path');
 
 
 // Express Application Instance.
@@ -18,11 +19,23 @@ const PORT = 3000 || process.env.PORT;
 
 //view engine
 app.set("view engine","ejs");
+//views path set
+app.set('views', path.join(__dirname, 'views'));
+// for the public files STATIC FILES
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 
 //routes
 app.get("/", (req, res) => {
-    res.render("home", { name: "Ramesh" });
+    res.render("home");
+});
+app.get("/login", (req, res) => {
+    res.render("auth/login");
+});
+app.get("/dashboard", (req, res) => {
+    res.render("admin/dashboard");
 });
 
 
