@@ -80,13 +80,8 @@ app.use('/auth', authRoutes)
 app.get('/', (req, res) => {
     res.render('auth/login', { mode: "signin" });
 });
-// app.get('/login', (req, res) => {
-//     res.render('auth/login', { mode: "signin" });
-// });
-app.get("/logout", (req, res) => {
-    req.session.destroy(() => {
-        res.redirect("/login");
-    });
+app.get('/login', (req, res) => {
+    res.render('auth/login', { mode: "signin" });
 });
 
 app.get('/register', (req, res) => {
@@ -96,6 +91,11 @@ app.get("/dashboard", requireAuth, (req, res) => {
     res.render("admin/dashboard", { user: req.session.user });
 });
 
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
+});
 // app.get('/dashboard',(req , res) => {
 //     res.render('admin/dashboard')
 // })

@@ -1,5 +1,6 @@
- <link rel="stylesheet" href="/css/admin-dashboard.css" />
+<link rel="stylesheet" href="/css/admin-dashboard.css" />
 </head>
+
 <body>
   <div class="admin-layout">
 
@@ -19,7 +20,15 @@
       <!-- Welcome + Stats -->
       <section class="welcome-section">
         <div class="welcome-card">
-          <h2>Welcome, Admin 👋</h2>
+          <h1>Welcome, <%= user.name %> </h1>
+          
+            <li><strong>Email:</strong>
+              <%= user.email %>
+            </li>
+            <li><strong>Role:</strong>
+              <%= user.role %>
+            </li>
+          
           <p>Manage your users, update their details, and keep your app secure.</p>
         </div>
 

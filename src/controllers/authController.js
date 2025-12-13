@@ -70,7 +70,7 @@ const handleLogin = async (req, res) => {
 
   } catch (error) {
       console.error(error);
-      res.send("Login failed");
+      // res.send("Login failed");
       return res.redirect("/login");
   }
 };
