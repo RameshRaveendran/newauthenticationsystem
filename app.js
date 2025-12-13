@@ -6,9 +6,13 @@ require("dotenv").config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require("express-session")
+
+
 //normal imports
 const connectDB = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
+const requireAuth = require("./src/middlewares/authMiddleware");
 
 
 // Express Application Instance.
@@ -24,13 +28,22 @@ const PORT = 3000 || process.env.PORT;
 //Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// for the public files STATIC FILES
+app.use(express.static(path.join(__dirname, 'public')));
+// session Middleware handling 
+app.use(
+    session({
+        secret:process.env.SESSION_SECRET,
+        resave:false,
+        saveUninitialized:false,
+        cookie:{maxAge:1000 * 60 * 60 }
+    })
+);
 
 //view engine
 app.set("view engine","ejs");
 //views path set
 app.set('views', path.join(__dirname, 'views'));
-// for the public files STATIC FILES
-app.use(express.static(path.join(__dirname, 'public')));
 
 //conncet DB
 connectDB();
@@ -62,17 +75,30 @@ app.use('/auth', authRoutes)
 //     res.render('auth/login', { mode: "signup" });
 // });
 
+
+
+app.get('/', (req, res) => {
+    res.render('auth/login', { mode: "signin" });
+});
+// app.get('/login', (req, res) => {
+//     res.render('auth/login', { mode: "signin" });
+// });
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
+});
+
 app.get('/register', (req, res) => {
     res.render('auth/login', { mode: "signup" });
 });
-
-app.get('/login', (req, res) => {
-    res.render('auth/login', { mode: "signin" });
+app.get("/dashboard", requireAuth, (req, res) => {
+    res.render("admin/dashboard", { user: req.session.user });
 });
 
-app.get('/dashboard',(req , res) => {
-    res.render('admin/dashboard')
-})
+// app.get('/dashboard',(req , res) => {
+//     res.render('admin/dashboard')
+// })
 
 
 

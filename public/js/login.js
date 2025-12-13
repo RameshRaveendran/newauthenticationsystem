@@ -2,6 +2,7 @@ const sign_in_btn = document.querySelector("#sign-in-btn");
 const sign_up_btn = document.querySelector("#sign-up-btn");
 const container = document.querySelector(".container");
 
+
 // sign_up_btn.addEventListener("click", () => {
 //   container.classList.add("sign-up-mode");
 // });
@@ -58,6 +59,7 @@ loginForm.addEventListener("submit", (e) => {
 
     if (username.length === 0) {
         loginError.innerText = "❌ Username is required";
+        Swal.fire("SweetAlert2 is working!");
         return;
     }
 

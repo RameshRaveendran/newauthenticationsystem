@@ -7,9 +7,9 @@ const { handleRegister,handleLogin } = require('../controllers/authController');
 router.post("/register",handleRegister);
 router.post("/login",handleLogin);
 
-// router.get('/register', (req, res) => {
-//      res.render('auth/login', { mode: "signup" });
-//  });
+router.get('/register', (req, res) => {
+     res.render('auth/login', { mode: "signup" });
+ });
 
 
 module.exports = router;
