@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/css/user-dashboard.css" />
+</head>
+
+<body>
+  <div class="dashboard-layout">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <h1 class="logo">My Account</h1>
+      <a href="/logout" class="btn btn-outline">Logout</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Welcome -->
+      <section class="welcome-card">
+        <h1>Welcome, <%= user.name %> 👋</h1>
+        <p>Glad to see you back. This is your personal dashboard.</p>
+      </section>
+
+      <!-- User Info -->
+      <section class="info-card">
+        <h2>Your Details</h2>
+
+        <ul class="info-list">
+          <li><strong>Name:</strong> <%= user.name %></li>
+          <li><strong>Email:</strong> <%= user.email %></li>
+          <li><strong>Role:</strong> <%= user.role %></li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>
+<script>
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+</script>

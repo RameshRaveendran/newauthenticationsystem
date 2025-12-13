@@ -140,3 +140,10 @@ logoutBtn.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   renderUsers();
 });
+// for the backbutton stop
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+

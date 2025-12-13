@@ -66,11 +66,12 @@ const handleLogin = async (req, res) => {
         role: user.role
       };
 
-      return res.redirect("/dashboard");
+      return res.redirect("/user/dashboard");
 
   } catch (error) {
       console.error(error);
       // res.send("Login failed");
+      res.clearCookie("connect.sid");
       return res.redirect("/login");
   }
 };
