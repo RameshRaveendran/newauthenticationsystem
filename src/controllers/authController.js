@@ -97,37 +97,4 @@ const handleLogin = async (req, res) => {
 };
 
 
-// const handleLogin = async (req, res) => {
-//   try {
-//     const { loginUsername, loginPassword } = req.body;
-
-//     console.log("LOGIN BODY:", req.body);
-
-//     // 1. Backend validation
-//     if (!loginUsername || !loginPassword) {
-//       return res.redirect("/login");
-//     }
-
-//     // 2. Check if user exists
-//     const user = await User.findOne({ name: loginUsername });
-
-//     if (!user) {
-//       return res.send("❌ User not found");
-//     }
-
-//     // 3. Compare passwords
-//     const isMatch = await bcrypt.compare(loginPassword, user.password);
-
-//     if (!isMatch) {
-//       return res.send("❌ Incorrect password");
-//     }
-
-//     // 4. If success → redirect to dashboard
-//     return res.redirect("/dashboard");
-//   } catch (error) {
-//     console.error(error);
-//     res.send("❌ Login failed.");
-//   }
-// };
-
 module.exports = { handleRegister, handleLogin };
