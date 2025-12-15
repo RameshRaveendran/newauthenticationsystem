@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
-
 /////////////////////////////REGISTER
 
 const handleRegister = async (req, res) => {
@@ -39,7 +38,7 @@ const handleRegister = async (req, res) => {
 
     // 5. Redirect to login page
     // return res.redirect("/login");
-    return res.send("successfull login")
+    return res.send("successfull login");
   } catch (error) {
     console.error(error);
     return res.send("❌ Registration failed. Try again.");
@@ -49,30 +48,51 @@ const handleRegister = async (req, res) => {
 //////////////////////////LOGIN
 const handleLogin = async (req, res) => {
   try {
-      const { loginUsername, loginPassword } = req.body;
+    const { loginUsername, loginPassword } = req.body;
 
-      // find user
-      const user = await User.findOne({ name: loginUsername });
-      if (!user) return res.send("❌ User not found");
+    if (!loginUsername || !loginPassword) {
+      return res.json({
+        success: false,
+        message: "Username and password are required"
+      });
+    }
 
-      const isMatch = await bcrypt.compare(loginPassword, user.password);
-      if (!isMatch) return res.send("❌ Incorrect password");
+    const user = await User.findOne({ name: loginUsername });
 
-      // ✔ CREATE SESSION
-      req.session.user = {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      };
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found"
+      });
+    }
 
-      return res.redirect("/user/dashboard");
+    const isMatch = await bcrypt.compare(loginPassword, user.password);
+
+    if (!isMatch) {
+      return res.json({
+        success: false,
+        message: "Incorrect password"
+      });
+    }
+
+    // ✅ create session
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+
+    return res.json({
+      success: true
+    });
 
   } catch (error) {
-      console.error(error);
-      // res.send("Login failed");
-      res.clearCookie("connect.sid");
-      return res.redirect("/login");
+    console.error(error);
+    return res.json({
+      success: false,
+      message: "Something went wrong"
+    });
   }
 };
 
@@ -111,5 +131,3 @@ const handleLogin = async (req, res) => {
 // };
 
 module.exports = { handleRegister, handleLogin };
-
-

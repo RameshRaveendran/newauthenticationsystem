@@ -51,27 +51,63 @@ const loginPassword = document.querySelector("#loginPassword");
 const loginError = document.querySelector("#loginError");
 
 // SIGN IN LOGIC
-loginForm.addEventListener("submit", (e) => {
-    // e.preventDefault();
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault(); // ❌ stop normal submit
 
-    const username = loginUsername.value.trim();
-    const password = loginPassword.value.trim();
+  const username = loginUsername.value.trim();
+  const password = loginPassword.value.trim();
 
-    if (username.length === 0) {
-        loginError.innerText = "❌ Username is required";
-        Swal.fire("SweetAlert2 is working!");
-        return;
+  // 1️⃣ Both missing
+  if (!username && !password) {
+    return Swal.fire("Error", "Username and Password are required", "error");
+  }
+
+  // 2️⃣ Username missing
+  if (!username) {
+    return Swal.fire("Error", "Username is required", "error");
+  }
+
+  // 3️⃣ Password missing
+  if (!password) {
+    return Swal.fire("Error", "Password is required", "error");
+  }
+
+  // 4️⃣ Send to backend
+  try {
+    const res = await fetch("/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        loginUsername: username,
+        loginPassword: password
+      })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      return Swal.fire("Login Failed", data.message, "error");
     }
 
-    if (password.length < 6) {
-        loginError.innerText = "❌ Password must be at least 6 characters";
-        return;
-    }
+    // ✅ success
+    Swal.fire({
+      title: "Success",
+      text: "Login successful",
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => {
+      window.location.href = "/user/dashboard";
+    });
 
-    loginError.innerText = "";
-
-    console.log("Sending login data:", { username, password });
+  } catch (err) {
+    Swal.fire("Error", "Server error. Try again.", "error");
+  }
 });
+
+
 
 // SIGN UP — select elements
 const signupForm = document.querySelector("#signupForm");

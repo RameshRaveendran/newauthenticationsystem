@@ -98,18 +98,32 @@ connectDB();
 
 
 
-app.get('/', (req, res) => {
-    res.render('auth/login', { mode: "signin" });
-});
-app.get('/login', (req, res) => {
-    res.render('auth/login', { mode: "signin" });
+// app.get('/', (req, res) => {
+//     res.render('auth/login', { mode: "signin" });
+// });
+// app.get('/login', (req, res) => {
+//     res.render('auth/login', { mode: "signin" });
+// });
+
+// app.get('/register', (req, res) => {
+//     res.render('auth/login', { mode: "signup" });
+// });
+// app.get("/user/dashboard", requireAuth, (req, res) => {
+//   res.render("user/dashboard");
+// });
+app.get("/", (req, res) => {
+  res.render("auth/login", { mode: "signin" });
 });
 
-app.get('/register', (req, res) => {
-    res.render('auth/login', { mode: "signup" });
+app.get("/login", (req, res) => {
+  res.render("auth/login", {
+    mode: "signin",
+    error: req.query.error
+  });
 });
-app.get("/user/dashboard", requireAuth, (req, res) => {
-  res.render("user/dashboard");
+
+app.get("/register", (req, res) => {
+  res.render("auth/login", { mode: "signup" });
 });
 
 app.get("/logout", (req, res) => {

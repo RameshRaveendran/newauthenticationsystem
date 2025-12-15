@@ -23,8 +23,10 @@
 
 					<input type="submit" value="Login" class="btn solid" />
 				</form>
+				
 
-				<!-- <form action="#" class="sign-in-form" id="loginForm">
+
+						<!-- <form action="#" class="sign-in-form" id="loginForm">
 					<h2 class="title">Sign in</h2>
 					<div class="input-field">
 						<i class="fas fa-user"></i>
@@ -52,23 +54,24 @@
 						</a>
 					</div>
 				</form>  -->
-				<form action="/auth/register" class="sign-up-form" id="signupForm" method="POST">
-					<h2 class="title">Sign up</h2>
-					<div class="input-field">
-						<i class="fas fa-user"></i>
-						<input type="text" name="signupUsername" id="signupUsername" placeholder="Username" />
-					</div>
-					<div class="input-field">
-						<i class="fas fa-envelope"></i>
-						<input type="email" name="signupEmail" id="signupEmail" placeholder="Email" />
-					</div>
-					<div class="input-field">
-						<i class="fas fa-lock"></i>
-						<input type="password" name="signupPassword" id="signupPassword" placeholder="Password" />
-					</div>
-					<p id="signupError" style="color: red; font-size: 14px; margin-bottom: 10px;"></p>
-					<input type="submit" class="btn" value="Sign up" />
-					<!-- <p class="social-text">Or Sign up with social platforms</p>
+						<form action="/auth/register" class="sign-up-form" id="signupForm" method="POST">
+							<h2 class="title">Sign up</h2>
+							<div class="input-field">
+								<i class="fas fa-user"></i>
+								<input type="text" name="signupUsername" id="signupUsername" placeholder="Username" />
+							</div>
+							<div class="input-field">
+								<i class="fas fa-envelope"></i>
+								<input type="email" name="signupEmail" id="signupEmail" placeholder="Email" />
+							</div>
+							<div class="input-field">
+								<i class="fas fa-lock"></i>
+								<input type="password" name="signupPassword" id="signupPassword"
+									placeholder="Password" />
+							</div>
+							<p id="signupError" style="color: red; font-size: 14px; margin-bottom: 10px;"></p>
+							<input type="submit" class="btn" value="Sign up" />
+							<!-- <p class="social-text">Or Sign up with social platforms</p>
 					<div class="social-media">
 						<a href="#" class="social-icon">
 							<i class="fab fa-facebook-f"></i>
@@ -83,7 +86,7 @@
 							<i class="fab fa-linkedin-in"></i>
 						</a>
 					</div> -->
-				</form>
+						</form>
 			</div>
 		</div>
 
@@ -127,3 +130,4 @@
 		document.querySelector(".container").classList.remove("sign-up-mode");
 	}
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
