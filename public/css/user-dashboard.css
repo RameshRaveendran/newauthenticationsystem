@@ -76,6 +76,12 @@ body {
   color: var(--green-main);
 }
 
+/* anchor tag */
+a{
+  text-decoration: none;
+  font-weight: 700;
+}
+
 /* ---------- Main ---------- */
 
 .main-content {
