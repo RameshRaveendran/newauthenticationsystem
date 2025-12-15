@@ -111,22 +111,23 @@ connectDB();
 // app.get("/user/dashboard", requireAuth, (req, res) => {
 //   res.render("user/dashboard");
 // });
-app.get("/", (req, res) => {
+app.get("/",noCache,(req, res) => {
   res.render("auth/login", { mode: "signin" });
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", noCache,(req, res) => {
   res.render("auth/login", {
     mode: "signin",
     error: req.query.error
   });
 });
 
-app.get("/register", (req, res) => {
+
+app.get("/register",noCache, (req, res) => {
   res.render("auth/login", { mode: "signup" });
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", noCache,(req, res) => {
     req.session.destroy(() => {
         res.clearCookie("connect.sid");
         res.redirect("/login");

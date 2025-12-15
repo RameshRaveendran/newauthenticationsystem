@@ -6,7 +6,7 @@
 	<div class="container">
 		<div class="forms-container">
 			<div class="signin-signup">
-				<form action="/auth/login" method="POST" class="sign-in-form" id="loginForm">
+				<form action="/auth/login" method="POST" class="sign-in-form" id="loginForm"  >
 					<h2 class="title">Sign in</h2>
 
 					<div class="input-field">
@@ -16,7 +16,7 @@
 
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input type="password" name="loginPassword" id="loginPassword" placeholder="Password" />
+						<input type="password" name="loginPassword" id="loginPassword" placeholder="Password"  autocomplete="off"/>
 					</div>
 
 					<p id="loginError" style="color: red; font-size: 14px; margin-bottom: 10px;"></p>
@@ -131,3 +131,19 @@
 	}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("form").forEach(form => form.reset());
+  });
+</script> -->
+
+<script>
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      // Page restored from BFCache
+      document.querySelectorAll("input").forEach(input => {
+        input.value = "";
+      });
+    }
+  });
+</script>
