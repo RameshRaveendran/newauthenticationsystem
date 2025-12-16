@@ -1,51 +1,169 @@
+// const User = require("../models/userModel");
+// const bcrypt = require("bcrypt");
+
+// /////////////////////////////REGISTER//////////////////////////////////////////////////////////////////
+
+// const handleRegister = async (req, res) => {
+//   try {
+//     const { signupUsername, signupEmail, signupPassword } = req.body;
+
+//     console.log("REGISTER BODY:", req.body);
+
+//     // 1. Validate fields
+//     if (!signupUsername || !signupEmail || !signupPassword) {
+//       // res.send("❌ All fields are required poda");
+//       // return res.redirect("/register");
+//       return res.json({
+//         success: false,
+//         message: "All fields are required"
+//       });
+//     }
+
+//     // 2. Check if email already exists
+//     const existingUser = await User.findOne({ email: signupEmail });
+//     if (existingUser) {
+//       // return res.send("❌ Email already registered");
+//         return res.json({
+//         success: false,
+//         message: "❌ Email already registered"
+//       });
+//     }
+
+//     // 3. Hash password
+//     const hashedPassword = await bcrypt.hash(signupPassword, 10);
+
+//     // 4. Create new user in DB (mapping form → schema)
+//     const newUser = new User({
+//       name: signupUsername, // schema expects "name"
+//       email: signupEmail, // schema expects "email"
+//       password: hashedPassword, // schema expects "password"
+//       role: "user", // default, optional
+//     });
+
+//     await newUser.save();
+
+//     console.log("User Saved:", newUser);
+
+//     // 5. Redirect to login page
+//     // return res.redirect("/login");
+//     return res.send("successfull login");
+//   } catch (error) {
+//     console.error(error);
+//     return res.send("❌ Registration failed. Try again.");
+//   }
+// };
+
+// //////////////////////////LOGIN//////////////////////////////////////////////////////////////////////////
+// const handleLogin = async (req, res) => {
+//   try {
+//     const { loginUsername, loginPassword } = req.body;
+
+//     if (!loginUsername || !loginPassword) {
+//       return res.json({
+//         success: false,
+//         message: "Username and password are required"
+//       });
+//     }
+
+//     const user = await User.findOne({ name: loginUsername });
+
+//     if (!user) {
+//       return res.json({
+//         success: false,
+//         message: "User not found"
+//       });
+//     }
+
+//     const isMatch = await bcrypt.compare(loginPassword, user.password);
+
+//     if (!isMatch) {
+//       return res.json({
+//         success: false,
+//         message: "Incorrect password"
+//       });
+//     }
+
+//     // ✅ create session
+//     req.session.user = {
+//       id: user._id,
+//       name: user.name,
+//       email: user.email,
+//       role: user.role
+//     };
+
+//     return res.json({
+//       success: true
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     return res.json({
+//       success: false,
+//       message: "Something went wrong"
+//     });
+//   }
+// };
+
+
+// module.exports = { handleRegister, handleLogin };
+
+
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
-/////////////////////////////REGISTER
+///////////////////////////// REGISTER /////////////////////////////
 
 const handleRegister = async (req, res) => {
   try {
     const { signupUsername, signupEmail, signupPassword } = req.body;
 
-    console.log("REGISTER BODY:", req.body);
-
-    // 1. Validate fields
+    // 1️⃣ Validate
     if (!signupUsername || !signupEmail || !signupPassword) {
-      // res.send("❌ All fields are required poda");
-      return res.redirect("/register");
+      return res.json({
+        success: false,
+        message: "All fields are required"
+      });
     }
 
-    // 2. Check if email already exists
+    // 2️⃣ Check email
     const existingUser = await User.findOne({ email: signupEmail });
     if (existingUser) {
-      return res.send("❌ Email already registered");
+      return res.json({
+        success: false,
+        message: "Email already registered"
+      });
     }
 
-    // 3. Hash password
+    // 3️⃣ Hash password
     const hashedPassword = await bcrypt.hash(signupPassword, 10);
 
-    // 4. Create new user in DB (mapping form → schema)
+    // 4️⃣ Save user
     const newUser = new User({
-      name: signupUsername, // schema expects "name"
-      email: signupEmail, // schema expects "email"
-      password: hashedPassword, // schema expects "password"
-      role: "user", // default, optional
+      name: signupUsername,
+      email: signupEmail,
+      password: hashedPassword,
+      role: "user"
     });
 
     await newUser.save();
 
-    console.log("User Saved:", newUser);
+    // 5️⃣ Success response
+    return res.json({
+      success: true,
+      message: "Registration successful"
+    });
 
-    // 5. Redirect to login page
-    // return res.redirect("/login");
-    return res.send("successfull login");
   } catch (error) {
-    console.error(error);
-    return res.send("❌ Registration failed. Try again.");
+    console.error("REGISTER ERROR:", error);
+    return res.json({
+      success: false,
+      message: "Registration failed. Try again."
+    });
   }
 };
 
-//////////////////////////LOGIN
+///////////////////////////// LOGIN /////////////////////////////
+
 const handleLogin = async (req, res) => {
   try {
     const { loginUsername, loginPassword } = req.body;
@@ -75,7 +193,7 @@ const handleLogin = async (req, res) => {
       });
     }
 
-    // ✅ create session
+    // ✅ Session
     req.session.user = {
       id: user._id,
       name: user.name,
@@ -84,17 +202,17 @@ const handleLogin = async (req, res) => {
     };
 
     return res.json({
-      success: true
+      success: true,
+      message: "Login successful"
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("LOGIN ERROR:", error);
     return res.json({
       success: false,
       message: "Something went wrong"
     });
   }
 };
-
 
 module.exports = { handleRegister, handleLogin };
