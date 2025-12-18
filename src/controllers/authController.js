@@ -94,9 +94,14 @@ const handleLogin = async (req, res) => {
       role: user.role
     };
 
+    // return res.json({
+    //   success: true,
+    //   message: "Login successful"
+    // });
     return res.json({
       success: true,
-      message: "Login successful"
+      message: "Login Successful",
+      role: user.role
     });
 
   } catch (error) {

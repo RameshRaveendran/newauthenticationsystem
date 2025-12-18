@@ -14,6 +14,8 @@ const noCache = require("./src/middlewares/noCache");
 const connectDB = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
 const requireAuth = require("./src/middlewares/authMiddleware");
+const requireAdmin = require("./src/middlewares/adminMiddleware");
+const requireUser = require("./src/middlewares/userMiddleware");
 
 
 
@@ -35,6 +37,8 @@ const PORT = 3000 || process.env.PORT;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
+
 // session Middleware handling 
 app.use(
     session({
@@ -44,7 +48,8 @@ app.use(
         cookie:{maxAge:1000 * 60 * 60 }
     })
 );
-
+const setUser = require("./src/middlewares/setUser");
+app.use(setUser);
 // for the public files STATIC FILES
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -59,14 +64,37 @@ app.use('/auth', authRoutes)
 
 
 //
+// app.get(
+//   "/user/dashboard",
+//   requireAuth,
+//   noCache,
+//   (req, res) => {
+//     res.render("user/dashboard");
+//   }
+// );
 app.get(
-  "/user/dashboard",
-  requireAuth,
+  "/admin/dashboard",
+  requireAdmin,
   noCache,
   (req, res) => {
-    res.render("user/dashboard");
+    res.render("admin/dashboard", {
+      user: req.session.user
+    });
   }
 );
+
+
+app.get(
+  "/user/dashboard",
+  requireUser,
+  noCache,
+  (req, res) => {
+    res.render("user/dashboard", {
+      user: req.session.user
+    });
+  }
+);
+
 
 //conncet DB
 connectDB();
