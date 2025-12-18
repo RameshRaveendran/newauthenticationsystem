@@ -130,7 +130,7 @@ editUserForm.addEventListener("submit", (event) => {
 // Logout
 logoutBtn.addEventListener("click", () => {
   // Option 1: redirect to logout route
-  window.location.href = "/login";
+  window.location.href = "/logout";
 
   // Option 2 (if you use POST logout):
   // fetch('/logout', { method: 'POST' }).then(() => window.location.href = '/login');

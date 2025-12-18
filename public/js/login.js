@@ -84,8 +84,13 @@ loginForm.addEventListener("submit", async (e) => {
       timer: 1500,
       showConfirmButton: false
     }).then(() => {
-      window.location.href = "/user/dashboard";
-    });
+  if (data.role === "admin") {
+    window.location.href = "/admin/dashboard";
+  } else {
+    window.location.href = "/user/dashboard";
+  }
+});
+
 
   } catch (err) {
     Swal.fire("Error", "Server error. Try again.", "error");
