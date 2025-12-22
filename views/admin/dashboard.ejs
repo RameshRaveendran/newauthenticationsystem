@@ -1,4 +1,9 @@
-<link rel="stylesheet" href="/css/admin-dashboard.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/admin-dashboard.css" />
 </head>
 
 <body>
@@ -20,16 +25,16 @@
       <!-- Welcome + Stats -->
       <section class="welcome-section">
         <div class="welcome-card">
-          <h1>Welcome, <%= user.name %> </h1>
-          
-            <li><strong>Email:</strong>
-              <%= user.email %>
-            </li>
-            <li><strong>Role:</strong>
-              <%= user.role %>
-            </li>
-          
-          <p>Manage your users, update their details, and keep your app secure.</p>
+          <h1>Welcome, <%= user.name %></h1>
+
+          <ul>
+            <li><strong>Email:</strong> <%= user.email %></li>
+            <li><strong>Role:</strong> <%= user.role %></li>
+          </ul>
+
+          <p>
+            Manage your users, update their details, and keep your app secure.
+          </p>
         </div>
 
         <div class="stats-grid">
@@ -50,11 +55,13 @@
 
       <!-- Users & Edit Panel -->
       <section class="users-section">
+
         <!-- Users Table -->
         <div class="users-table-card">
           <div class="card-header">
             <h2>Users</h2>
           </div>
+
           <div class="table-wrapper">
             <table>
               <thead>
@@ -78,7 +85,9 @@
           <div class="card-header">
             <h2>Edit User</h2>
           </div>
+
           <form id="editUserForm" class="form">
+
             <!-- Hidden ID -->
             <input type="hidden" id="editUserId" />
 
@@ -89,12 +98,30 @@
 
             <div class="form-group">
               <label for="editUserEmail">Email</label>
-              <input type="email" id="editUserEmail" placeholder="Enter new email" required />
+              <input
+                type="email"
+                id="editUserEmail"
+                placeholder="Enter new email"
+                required
+              />
             </div>
 
             <div class="form-group">
               <label for="editUserPassword">New Password</label>
-              <input type="password" id="editUserPassword" placeholder="Enter new password" required />
+              <input
+                type="password"
+                id="editUserPassword"
+                placeholder="Leave blank to keep current password"
+              />
+            </div>
+
+            <!-- ✅ ROLE SELECT (FIXED POSITION) -->
+            <div class="form-group">
+              <label for="editUserRole">Role</label>
+              <select id="editUserRole">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
 
             <button type="submit" class="btn btn-primary full-width">
@@ -102,9 +129,9 @@
             </button>
 
             <p class="hint-text">
-              After connecting backend:
-              this will call your API to update user's email & password.
+              This will update user's email, password, and role securely.
             </p>
+
           </form>
         </div>
       </section>
@@ -112,10 +139,17 @@
   </div>
 
   <script src="/js/admin-dashboard.js" defer></script>
-  <script>
-  if (!window.performance || performance.navigation.type === 2) {
-    location.reload();
-  }
-</script>
 
+  <!-- Prevent back button cache issue -->
+  <script>
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
+</html>

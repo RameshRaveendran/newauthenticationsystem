@@ -48,6 +48,8 @@ app.use(
         cookie:{maxAge:1000 * 60 * 60 }
     })
 );
+
+
 const setUser = require("./src/middlewares/setUser");
 app.use(setUser);
 // for the public files STATIC FILES
@@ -61,6 +63,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // linking authroutes
 app.use('/auth', authRoutes)
+const adminRoutes = require("./src/routes/adminRoutes");
+app.use("/admin", adminRoutes);
 
 
 //
@@ -74,8 +78,8 @@ app.use('/auth', authRoutes)
 // );
 app.get(
   "/admin/dashboard",
-  requireAdmin,
   noCache,
+  requireAdmin,
   (req, res) => {
     res.render("admin/dashboard", {
       user: req.session.user
@@ -86,8 +90,8 @@ app.get(
 
 app.get(
   "/user/dashboard",
+    noCache,
   requireUser,
-  noCache,
   (req, res) => {
     res.render("user/dashboard", {
       user: req.session.user
@@ -116,12 +120,13 @@ app.get("/register",noCache, (req, res) => {
   res.render("auth/login", { mode: "signup" });
 });
 
-app.get("/logout", noCache,(req, res) => {
-    req.session.destroy(() => {
-        res.clearCookie("connect.sid");
-        res.redirect("/login");
-    });
+app.get("/logout", noCache, (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.status(200).redirect("/login");
+  });
 });
+
 // app.get('/dashboard',(req , res) => {
 //     res.render('admin/dashboard')
 // })

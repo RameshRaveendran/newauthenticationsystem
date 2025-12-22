@@ -1,26 +1,40 @@
-// For now we use dummy users array.
-// Later you can replace this with data from your backend (EJS, API, etc).
 
-let users = [
-  { _id: "1", name: "Ramesh", email: "ramesh@example.com", role: "user" },
-  { _id: "2", name: "Suresh", email: "suresh@example.com", role: "user" },
-  { _id: "3", name: "Admin", email: "admin@example.com", role: "admin" }
-];
+// ====================== GLOBAL STATE ======================
+let users = [];
 
+// ====================== DOM ELEMENTS ======================
 const usersTableBody = document.getElementById("usersTableBody");
 const totalUsersEl = document.getElementById("totalUsers");
 
-// Edit form elements
 const editUserForm = document.getElementById("editUserForm");
 const editUserIdInput = document.getElementById("editUserId");
 const editUserNameInput = document.getElementById("editUserName");
 const editUserEmailInput = document.getElementById("editUserEmail");
 const editUserPasswordInput = document.getElementById("editUserPassword");
+const editUserRoleSelect = document.getElementById("editUserRole");
 
-// Logout button
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Render users in table
+// ====================== FETCH USERS ======================
+async function fetchUsers() {
+  try {
+    const res = await fetch("/admin/users");
+    const data = await res.json();
+
+    if (!data.success) {
+  window.location.replace("/login");
+  return;
+}
+
+
+    users = data.users;
+    renderUsers();
+  } catch (err) {
+    alert("Server error while fetching users");
+  }
+}
+
+// ====================== RENDER USERS ======================
 function renderUsers() {
   usersTableBody.innerHTML = "";
 
@@ -33,10 +47,14 @@ function renderUsers() {
       <td>${user.email}</td>
       <td>${user.role}</td>
       <td>
-        <button class="btn btn-small btn-primary" data-action="edit" data-id="${user._id}">
+        <button class="btn btn-small btn-primary" data-action="edit" data-id="${
+          user._id
+        }">
           Edit
         </button>
-        <button class="btn btn-small btn-danger" data-action="delete" data-id="${user._id}">
+        <button class="btn btn-small btn-danger" data-action="delete" data-id="${
+          user._id
+        }">
           Delete
         </button>
       </td>
@@ -48,7 +66,7 @@ function renderUsers() {
   totalUsersEl.textContent = users.length;
 }
 
-// Load user data into edit form
+// ====================== LOAD USER INTO FORM ======================
 function loadUserIntoForm(userId) {
   const user = users.find((u) => u._id === userId);
   if (!user) return;
@@ -57,93 +75,133 @@ function loadUserIntoForm(userId) {
   editUserNameInput.value = user.name;
   editUserEmailInput.value = user.email;
   editUserPasswordInput.value = "";
+  editUserRoleSelect.value = user.role;
 }
 
-// Handle table button clicks (edit/delete)
-usersTableBody.addEventListener("click", (event) => {
+// ====================== TABLE ACTIONS (EDIT / DELETE) ======================
+usersTableBody.addEventListener("click", async (event) => {
   const button = event.target.closest("button");
   if (!button) return;
 
   const action = button.dataset.action;
   const userId = button.dataset.id;
 
+  // ---------- EDIT ----------
   if (action === "edit") {
-    // Show user in edit form
     loadUserIntoForm(userId);
   }
 
-  if (action === "delete") {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
-
-    // TODO: in real app, call your backend:
-    // fetch(`/admin/users/${userId}`, { method: 'DELETE' })
-
-    // For now, just remove from array:
-    users = users.filter((u) => u._id !== userId);
-    renderUsers();
-
-    // If the deleted user was currently loaded in form, clear form
-    if (editUserIdInput.value === userId) {
-      editUserForm.reset();
-      editUserIdInput.value = "";
-    }
-  }
-});
-
-// Handle edit form submit (update email + password)
-editUserForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const userId = editUserIdInput.value;
-  const newEmail = editUserEmailInput.value.trim();
-  const newPassword = editUserPasswordInput.value.trim();
-
-  if (!userId) {
-    alert("Please select a user from the table first.");
-    return;
-  }
-
-  if (!newEmail || !newPassword) {
-    alert("Email and password are required.");
-    return;
-  }
-
-  // TODO: in real app, send request to backend:
-  // fetch(`/admin/users/${userId}`, {
-  //   method: "PUT",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify({ email: newEmail, password: newPassword })
-  // })
-
-  // For now, just update local array to simulate:
-  const userIndex = users.findIndex((u) => u._id === userId);
-  if (userIndex !== -1) {
-    users[userIndex].email = newEmail;
-  }
-
-  renderUsers();
-  alert("User updated (front-end simulation). Connect API for real update!");
-  editUserPasswordInput.value = "";
-});
-
-// Logout
-logoutBtn.addEventListener("click", () => {
-  // Option 1: redirect to logout route
-  window.location.href = "/logout";
-
-  // Option 2 (if you use POST logout):
-  // fetch('/logout', { method: 'POST' }).then(() => window.location.href = '/login');
-});
-
-// Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  renderUsers();
-});
-// for the backbutton stop
-  window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-      window.location.reload();
-    }
+  // ---------- DELETE ----------
+if (action === "delete") {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This user will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete",
+    cancelButtonText: "Cancel"
   });
 
+  if (!result.isConfirmed) return;
+
+  try {
+    const res = await fetch(`/admin/users/${userId}`, {
+      method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      Swal.fire("Error", data.message, "error");
+      return;
+    }
+
+    Swal.fire("Deleted!", data.message, "success");
+    fetchUsers();
+
+  } catch (err) {
+    Swal.fire("Error", "Server error while deleting user", "error");
+  }
+}
+
+});
+
+// ====================== UPDATE USER ======================
+editUserForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const userId = editUserIdInput.value;
+  if (!userId) {
+    Swal.fire("Warning", "Please select a user first", "warning");
+    return;
+  }
+
+  const payload = {
+    email: editUserEmailInput.value.trim(),
+    role: editUserRoleSelect.value
+  };
+
+  if (editUserPasswordInput.value.trim()) {
+    payload.password = editUserPasswordInput.value.trim();
+  }
+
+  try {
+    const res = await fetch(`/admin/users/${userId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      Swal.fire("Error", data.message, "error");
+      return;
+    }
+
+    Swal.fire({
+      title: "Updated!",
+      text: data.message,
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false
+    });
+
+    editUserForm.reset();
+    editUserIdInput.value = "";
+    fetchUsers();
+
+  } catch (err) {
+    Swal.fire("Error", "Server error while updating user", "error");
+  }
+});
+
+
+// ====================== LOGOUT ======================
+logoutBtn.addEventListener("click", async () => {
+  const result = await Swal.fire({
+    title: "Logout?",
+    text: "Are you sure you want to logout?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Logout"
+  });
+
+  if (result.isConfirmed) {
+    window.location.href = "/logout";
+  }
+});
+
+// ====================== INIT ======================
+document.addEventListener("DOMContentLoaded", () => {
+  fetchUsers();
+});
+
+// ====================== BACK BUTTON CACHE FIX ======================
+window.addEventListener("pageshow", function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
